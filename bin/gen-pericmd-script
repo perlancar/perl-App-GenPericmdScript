@@ -1,0 +1,44 @@
+#!perl
+
+# DATE
+# VERSION
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine::Any;
+
+Perinci::CmdLine::Any->new(
+    url => '/App/GenPericmdScript/gen_perinci_cmdline_script',
+)->run;
+
+# ABSTRACT:
+# PODNAME:
+
+=head1 SYNOPSIS
+
+Create a Perinci::CmdLine script:
+
+ % gen-pericmd-script /App/MyApp/myfunc > mycli
+
+Some more options (output to file, will automatically chmod +x the file and run
+L<shcompgen> if it's available on the system and output dir is in PATH, turn on
+debugging, overwrite existing output, pick Perinci::CmdLine::Any backend):
+
+ % gen-pericmd-script -o /path/to/mycli --overwrite --cmdline Classic --debug \
+     /App/MyApp/myfunc
+
+With subcommands:
+
+ % gen-pericmd-script update=/App/MyApp/update delete=/App/MyApp/delete >mycli
+
+
+=head1 DESCRIPTION
+
+
+=head1 SEE ALSO
+
+L<Perinci::CmdLine::Manual>
+
+L<Dist::Zilla::Plugin::Rinci::ScriptFromFunc>
