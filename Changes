@@ -1,5 +1,11 @@
 Revision history for App-GenPericmdScript
 
+0.02    2015-03-01 (PERLANCAR)
+
+	- Forgot to empty output if we are outputing to file instead of
+	  stdout.
+
+
 0.01    2015-03-01 (PERLANCAR)
 
         - First release.
