@@ -228,6 +228,8 @@ sub gen_perinci_cmdline_script {
                             "$output_name is also in PATH, running shcompgen ...");
             system "shcompgen", "generate", $output_name;
         }
+
+        $code = "";
     }
 
     [200, "OK", $code, {
