@@ -11,6 +11,7 @@ use Perinci::CmdLine::Any;
 
 Perinci::CmdLine::Any->new(
     url => '/App/GenPericmdScript/gen_perinci_cmdline_script',
+    log => 1,
 )->run;
 
 # ABSTRACT:
@@ -22,16 +23,20 @@ Create a Perinci::CmdLine script:
 
  % gen-pericmd-script /App/MyApp/myfunc > mycli
 
-Some more options (output to file, will automatically chmod +x the file and run
-L<shcompgen> if it's available on the system and output dir is in PATH, turn on
-debugging, overwrite existing output, pick Perinci::CmdLine::Any backend):
+Some more options (turn on debugging, output to file, overwrite existing output,
+will automatically chmod +x the file and run L<shcompgen> if it's available on
+the system and output dir is in PATH, pick Perinci::CmdLine::Any backend):
 
- % gen-pericmd-script -o /path/to/mycli --overwrite --cmdline Classic --debug \
+ % gen-pericmd-script --debug \
+     -o /path/to/mycli --overwrite \
+     --cmdline Perinci::CmdLine::Classic \
      /App/MyApp/myfunc
 
 With subcommands:
 
- % gen-pericmd-script update=/App/MyApp/update delete=/App/MyApp/delete >mycli
+ % gen-pericmd-script /App/MyApp/ \
+     -s update:/App/MyApp/update -s delete:/App/MyApp/delete \
+     > mycli
 
 
 =head1 DESCRIPTION
