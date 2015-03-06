@@ -10,6 +10,7 @@ use Log::Any '$log';
 
 use Data::Dump qw(dump);
 use File::Which;
+use String::Indent qw(indent);
 
 use Exporter qw(import);
 our @EXPORT_OK = qw(gen_perinci_cmdline_script);
@@ -122,6 +123,8 @@ _
 sub gen_perinci_cmdline_script {
     my %args = @_;
 
+    local $Data::Dump::INDENT = "    ";
+
     my $output_file = $args{output_file};
 
     my $script_name = $args{script_name};
@@ -202,7 +205,7 @@ sub gen_perinci_cmdline_script {
 
         "$cmdline_mod->new(\n",
         "    url => ", dump($args{url}), ",\n",
-        (defined($subcommands) ? "    subcommands => " . dump($subcommands) . ",\n" : ""),
+        (defined($subcommands) ? "    subcommands => " . indent("    ", dump($subcommands), {first_line_indent=>""}) . ",\n" : ""),
         (defined($args{log}) ? "    log => " . dump($args{log}) . ",\n" : ""),
         (defined($args{config_filename}) ? "    config_filename => " . dump($args{config_filename}) . ",\n" : ""),
         ")->run;\n",
