@@ -17,19 +17,22 @@ our @EXPORT_OK = qw(gen_perinci_cmdline_script);
 
 our %SPEC;
 
-sub _get_meta {
-    my ($url, $main_args) = @_;
-
+sub _pa {
     state $pa = do {
         require Perinci::Access;
         my $pa = Perinci::Access->new;
         $pa;
     };
+    $pa;
+}
+
+sub _riap_request {
+    my ($action, $url, $extras, $main_args) = @_;
 
     local $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0
         unless $main_args->{ssl_verify_hostname};
 
-    $pa->request(meta => $url);
+    _pa()->request($action => $url, %{$extras // {}});
 }
 
 $SPEC{gen_perinci_cmdline_script} = {
@@ -55,8 +58,8 @@ $SPEC{gen_perinci_cmdline_script} = {
             summary => 'URL to function (or package, if you have subcommands)',
             schema => 'str*',
             'x.schema.entity' => 'riap_url',
-            pos => 0,
             req => 1,
+            pos => 0,
         },
         subcommand => {
             summary => 'Subcommand name followed by colon and function URL',
@@ -73,6 +76,44 @@ Example (on CLI):
 _
             schema => ['array*', of=>'str*'],
             cmdline_aliases => { s=>{} },
+        },
+        subcommands_from_package_functions => {
+            summary => "Form subcommands from functions under package's URL",
+            schema => ['bool', is=>1],
+            description => <<'_',
+
+This is an alternative to the `subcommand` option. Instead of specifying each
+subcommand's name and URL, you can also specify that subcommand names are from
+functions under the package URL in `url`. So for example if `url` is `/My/App/`,
+hen all functions under `/My/App` are listed first. If the functions are:
+
+    foo
+    bar
+    baz_qux
+
+then the subcommands become:
+
+    foo => /My/App/foo
+    bar => /My/App/bar
+    "baz-qux" => /My/App/baz_qux
+
+_
+        },
+        include_package_functions_match => {
+            schema => 're*',
+            summary => 'Only include package functions matching this pattern',
+            links => [
+                'subcommands_from_package_functions',
+                'exclude_package_functions_match',
+            ],
+        },
+        exclude_package_functions_match => {
+            schema => 're*',
+            summary => 'Exclude package functions matching this pattern',
+            links => [
+                'subcommands_from_package_functions',
+                'include_package_functions_match',
+            ],
         },
         cmdline => {
             summary => 'Specify module to use',
@@ -161,10 +202,30 @@ sub gen_perinci_cmdline_script {
                 summary => $sc_summary,
             };
         }
+    } elsif ($args{subcommands_from_package_functions}) {
+        my $res = _riap_request(child_metas => $args{url} => {detail=>1}, \%args);
+        return [500, "Can't child_metas $args{url}: $res->[0] - $res->[1]"]
+            unless $res->[0] == 200;
+        $subcommands = {};
+        for my $uri (keys %{ $res->[2] }) {
+            next unless $uri =~ /\A\w+\z/; # functions only
+            my $meta = $res->[2]{$uri};
+            if ($args{include_package_functions_match}) {
+                next unless $uri =~ /$args{include_package_functions_match}/;
+            }
+            if ($args{exclude_package_functions_match}) {
+                next if $uri =~ /$args{exclude_package_functions_match}/;
+            }
+            (my $sc_name = $uri) =~ s/_/-/g;
+            $subcommands->{$sc_name} = {
+                url     => "$args{url}$uri",
+                summary => $meta->{summary},
+            };
+        }
     }
 
     # request metadata to, to get summary (etc)
-    my $res = _get_meta($args{url}, \%args);
+    my $res = _riap_request(meta => $args{url} => {}, \%args);
     return [500, "Can't meta $args{url}: $res->[0] - $res->[1]"]
         unless $res->[0] == 200;
     my $meta = $res->[2];
