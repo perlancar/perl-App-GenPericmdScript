@@ -59,6 +59,17 @@ $SPEC{gen_perinci_cmdline_script} = {
         },
         subcommand => {
             summary => 'Subcommand name followed by colon and function URL',
+            description => <<'_',
+
+Optionally, it can be additionally followed by a summary, so:
+
+    NAME:URL[:SUMMARY]
+
+Example (on CLI):
+
+    --subcommand "delete:/My/App/delete_item:Delete an item"
+
+_
             schema => ['array*', of=>'str*'],
             cmdline_aliases => { s=>{} },
         },
