@@ -1,5 +1,11 @@
 Revision history for App-GenPericmdScript
 
+0.04    2015-03-06 (PERLANCAR)
+
+	- Add options: --subcommands-from-package-functions,
+	  --{include,exclude}-package-functions-match.
+
+
 0.03    2015-03-06 (PERLANCAR)
 
         - No functional changes.
