@@ -1,5 +1,17 @@
 Revision history for App-GenPericmdScript
 
+0.06    2015-07-01 (PERLANCAR)
+
+        - No functional changes.
+
+        - Re-upload.
+
+
+0.05    2015-07-01 (PERLANCAR)
+
+        - Add #DIST to generated script (for Dist::Zilla::Plugin::OurDist).
+
+
 0.04    2015-03-06 (PERLANCAR)
 
 	- Add options: --subcommands-from-package-functions,

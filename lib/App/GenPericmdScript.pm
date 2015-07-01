@@ -119,7 +119,7 @@ _
             summary => 'Specify module to use',
             schema  => 'str',
             default => 'Perinci::CmdLine::Any',
-            'x.schema.entity' => 'perl_module',
+            'x.schema.entity' => 'modulename',
         },
         prefer_lite => {
             summary => 'Prefer Perinci::CmdLine::Lite backend',
@@ -149,7 +149,7 @@ _
         load_module => {
             summary => 'Load extra modules',
             schema => ['array', of=>'str*'],
-            'x.schema.element_entity' => 'perl_module',
+            'x.schema.element_entity' => 'modulename',
         },
         interpreter_path => {
             summary => 'What to put on shebang line',
