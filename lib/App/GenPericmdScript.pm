@@ -131,6 +131,10 @@ _
             summary => 'Will be passed to Perinci::CmdLine constructor',
             schema  => 'bool',
         },
+        extra_urls_for_version => {
+            summary => 'Will be passed to Perinci::CmdLine constructor',
+            schema => ['array*', of=>'str*'],
+        },
         default_log_level => {
             schema  => ['str', in=>[qw/trace debug info warn error fatal none/]],
         },
@@ -269,6 +273,7 @@ sub gen_perinci_cmdline_script {
         "    url => ", dump($args{url}), ",\n",
         (defined($subcommands) ? "    subcommands => " . indent("    ", dump($subcommands), {first_line_indent=>""}) . ",\n" : ""),
         (defined($args{log}) ? "    log => " . dump($args{log}) . ",\n" : ""),
+        (defined($args{extra_urls_for_version}) ? "    extra_urls_for_version => " . dump($args{extra_urls_for_version}) . ",\n" : ""),
         (defined($args{config_filename}) ? "    config_filename => " . dump($args{config_filename}) . ",\n" : ""),
         ")->run;\n",
         "\n",
