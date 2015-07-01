@@ -242,6 +242,7 @@ sub gen_perinci_cmdline_script {
         " version ", ($App::GenPericmdScript::VERSION // '?'), "\n",
         "\n",
         "# DATE\n",
+        "# DIST\n",
         "# VERSION\n",
         "\n",
         "use 5.010001;\n",
