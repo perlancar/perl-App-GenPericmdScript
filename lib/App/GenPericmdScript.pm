@@ -183,6 +183,7 @@ sub gen_perinci_cmdline_script {
     }
 
     my $cmdline_mod = "Perinci::CmdLine::Any";
+    my $cmdline_mod_ver = 0;
     if ($args{cmdline}) {
         my $val = $args{cmdline};
         if ($val eq 'any') {
@@ -191,6 +192,8 @@ sub gen_perinci_cmdline_script {
             $cmdline_mod = "Perinci::CmdLine::Classic";
         } elsif ($val eq 'lite') {
             $cmdline_mod = "Perinci::CmdLine::Lite";
+        } elsif ($val eq 'inline') {
+            $cmdline_mod = "Perinci::CmdLine::Inline";
         } else {
             $cmdline_mod = $val;
         }
@@ -228,62 +231,81 @@ sub gen_perinci_cmdline_script {
         }
     }
 
-    # request metadata to, to get summary (etc)
-    my $res = _riap_request(meta => $args{url} => {}, \%args);
-    return [500, "Can't meta $args{url}: $res->[0] - $res->[1]"]
-        unless $res->[0] == 200;
-    my $meta = $res->[2];
 
-    # the resulting code
-    my $code = join(
-        "",
-        "#!", ($args{interpreter_path} // $^X), "\n",
-        "\n",
-        "# Note: This script is a CLI interface",
-        ($meta->{args} ? " to Riap function $args{url}" : ""), # a quick hack to guess meta is func metadata (XXX should've done an info Riap request)
-        "\n",
-        "# and generated automatically using ", __PACKAGE__,
-        " version ", ($App::GenPericmdScript::VERSION // '?'), "\n",
-        "\n",
-        "# DATE\n",
-        "# DIST\n",
-        "# VERSION\n",
-        "\n",
-        "use 5.010001;\n",
-        "use strict;\n",
-        "use warnings;\n",
-        "\n",
+    # generate code
+    my $code;
+    if ($cmdline_mod eq 'Perinci::CmdLine::Inline') {
+        require Perinci::CmdLine::Inline;
+        $cmdline_mod_ver = $Perinci::CmdLine::Inline::VERSION;
+        my $res = Perinci::CmdLine::Inline::gen_inline_pericmd_script(
+            url => $args{url},
+            subcommands => $subcommands,
+            log => $args{log},
+            (extra_urls_for_version => $args{extra_urls_for_version}) x !!$args{extra_urls_for_version},
+            include => $args{load_module},
+            (code_before_parse_cmdline_options => $args{snippet_before_instantiate_cmdline}) x !!$args{snippet_before_instantiate_cmdline},
+            # config_filename => $args{config_filename},
+            shebang => $args{interpreter_path},
+        );
+        return $res if $res->[0] != 200;
+        $code = $res->[2];
+    } else {
+        # request metadata to get summary (etc)
+        my $res = _riap_request(meta => $args{url} => {}, \%args);
+        return [500, "Can't meta $args{url}: $res->[0] - $res->[1]"]
+            unless $res->[0] == 200;
+        my $meta = $res->[2];
 
-        ($args{load_module} && @{$args{load_module}} ?
-             join("", map {"use $_;\n"} @{$args{load_module}})."\n" : ""),
+        $code = join(
+            "",
+            "#!", ($args{interpreter_path} // $^X), "\n",
+            "\n",
+            "# Note: This script is a CLI interface",
+            ($meta->{args} ? " to Riap function $args{url}" : ""), # a quick hack to guess meta is func metadata (XXX should've done an info Riap request)
+            "\n",
+            "# and generated automatically using ", __PACKAGE__,
+            " version ", ($App::GenPericmdScript::VERSION // '?'), "\n",
+            "\n",
+            "# DATE\n",
+            "# DIST\n",
+            "# VERSION\n",
+            "\n",
+            "use 5.010001;\n",
+            "use strict;\n",
+            "use warnings;\n",
+            "\n",
 
-        ($args{default_log_level} ?
-             "BEGIN { no warnings; \$main::Log_Level = '$args{default_log_level}'; }\n\n" : ""),
+            ($args{load_module} && @{$args{load_module}} ?
+                 join("", map {"use $_;\n"} @{$args{load_module}})."\n" : ""),
 
-        "use $cmdline_mod",
-        ($cmdline_mod eq 'Perinci::CmdLine::Any' &&
-             defined($args{prefer_lite}) && !$args{prefer_lite} ? " -prefer_lite=>0" : ""),
-        ";\n\n",
+            ($args{default_log_level} ?
+                 "BEGIN { no warnings; \$main::Log_Level = '$args{default_log_level}'; }\n\n" : ""),
 
-        ($args{ssl_verify_hostname} ? "" : '$ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;' . "\n\n"),
+            "use $cmdline_mod",
+            ($cmdline_mod eq 'Perinci::CmdLine::Any' &&
+                 defined($args{prefer_lite}) && !$args{prefer_lite} ? " -prefer_lite=>0" : ""),
+            ";\n\n",
 
-        ($args{snippet_before_instantiate_cmdline} ? "# snippet_before_instantiate_cmdline\n" . $args{snippet_before_instantiate_cmdline} . "\n\n" : ""),
+            ($args{ssl_verify_hostname} ? "" : '$ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;' . "\n\n"),
 
-        "$cmdline_mod->new(\n",
-        "    url => ", dump($args{url}), ",\n",
-        (defined($subcommands) ? "    subcommands => " . indent("    ", dump($subcommands), {first_line_indent=>""}) . ",\n" : ""),
-        (defined($args{log}) ? "    log => " . dump($args{log}) . ",\n" : ""),
-        (defined($args{extra_urls_for_version}) ? "    extra_urls_for_version => " . dump($args{extra_urls_for_version}) . ",\n" : ""),
-        (defined($args{config_filename}) ? "    config_filename => " . dump($args{config_filename}) . ",\n" : ""),
-        ")->run;\n",
-        "\n",
-    );
+            ($args{snippet_before_instantiate_cmdline} ? "# snippet_before_instantiate_cmdline\n" . $args{snippet_before_instantiate_cmdline} . "\n\n" : ""),
 
-    # abstract line
-    $code .= "# ABSTRACT: " . ($meta->{summary} // $script_name) . "\n";
+            "$cmdline_mod->new(\n",
+            "    url => ", dump($args{url}), ",\n",
+            (defined($subcommands) ? "    subcommands => " . indent("    ", dump($subcommands), {first_line_indent=>""}) . ",\n" : ""),
+            (defined($args{log}) ? "    log => " . dump($args{log}) . ",\n" : ""),
+            (defined($args{extra_urls_for_version}) ? "    extra_urls_for_version => " . dump($args{extra_urls_for_version}) . ",\n" : ""),
+            (defined($args{config_filename}) ? "    config_filename => " . dump($args{config_filename}) . ",\n" : ""),
+            ")->run;\n",
+            "\n",
+        );
 
-    # podname
-    $code .= "# PODNAME: $script_name\n";
+        # abstract line
+        $code .= "# ABSTRACT: " . ($meta->{summary} // $script_name) . "\n";
+
+        # podname
+        $code .= "# PODNAME: $script_name\n";
+    } # END generate code
 
     if ($output_file ne '-') {
         $log->trace("Outputing result to %s ...", $output_file);
@@ -315,7 +337,7 @@ sub gen_perinci_cmdline_script {
 
     [200, "OK", $code, {
         'func.cmdline_module' => $cmdline_mod,
-        'func.cmdline_module_version' => 0,
+        'func.cmdline_module_version' => $cmdline_mod_ver,
         'func.script_name' => 0,
     }];
 }
