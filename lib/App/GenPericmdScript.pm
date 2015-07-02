@@ -162,6 +162,10 @@ _
         script_name => {
             schema => 'str',
         },
+        script_version => {
+            summary => 'Use this for version number instead',
+            schema => 'str',
+        },
 
     },
 };
@@ -240,6 +244,7 @@ sub gen_perinci_cmdline_script {
         my $res = Perinci::CmdLine::Inline::gen_inline_pericmd_script(
             url => $args{url},
             program_name => $args{script_name},
+            program_version => $args{script_version},
             subcommands => $subcommands,
             log => $args{log},
             (extra_urls_for_version => $args{extra_urls_for_version}) x !!$args{extra_urls_for_version},
