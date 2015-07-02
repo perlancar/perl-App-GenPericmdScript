@@ -239,6 +239,7 @@ sub gen_perinci_cmdline_script {
         $cmdline_mod_ver = $Perinci::CmdLine::Inline::VERSION;
         my $res = Perinci::CmdLine::Inline::gen_inline_pericmd_script(
             url => $args{url},
+            program_name => $args{script_name},
             subcommands => $subcommands,
             log => $args{log},
             (extra_urls_for_version => $args{extra_urls_for_version}) x !!$args{extra_urls_for_version},
