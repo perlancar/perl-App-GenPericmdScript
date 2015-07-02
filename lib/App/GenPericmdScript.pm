@@ -235,6 +235,23 @@ sub gen_perinci_cmdline_script {
         }
     }
 
+    # request metadata to get summary (etc)
+    my $meta;
+    {
+        my $res = _riap_request(meta => $args{url} => {}, \%args);
+        return [500, "Can't meta $args{url}: $res->[0] - $res->[1]"]
+            unless $res->[0] == 200;
+        $meta = $res->[2];
+    }
+
+    my $gen_sig = join(
+        "",
+        "# Note: This script is a CLI interface",
+        ($meta->{args} ? " to Riap function $args{url}" : ""), # a quick hack to guess meta is func metadata (XXX should've done an info Riap request)
+        "\n",
+        "# and generated automatically using ", __PACKAGE__,
+        " version ", ($App::GenPericmdScript::VERSION // '?'), "\n",
+    );
 
     # generate code
     my $code;
@@ -249,6 +266,7 @@ sub gen_perinci_cmdline_script {
             log => $args{log},
             (extra_urls_for_version => $args{extra_urls_for_version}) x !!$args{extra_urls_for_version},
             include => $args{load_module},
+            code_after_shebang => $gen_sig,
             (code_before_parse_cmdline_options => $args{snippet_before_instantiate_cmdline}) x !!$args{snippet_before_instantiate_cmdline},
             # config_filename => $args{config_filename},
             shebang => $args{interpreter_path},
@@ -256,21 +274,11 @@ sub gen_perinci_cmdline_script {
         return $res if $res->[0] != 200;
         $code = $res->[2];
     } else {
-        # request metadata to get summary (etc)
-        my $res = _riap_request(meta => $args{url} => {}, \%args);
-        return [500, "Can't meta $args{url}: $res->[0] - $res->[1]"]
-            unless $res->[0] == 200;
-        my $meta = $res->[2];
-
         $code = join(
             "",
             "#!", ($args{interpreter_path} // $^X), "\n",
             "\n",
-            "# Note: This script is a CLI interface",
-            ($meta->{args} ? " to Riap function $args{url}" : ""), # a quick hack to guess meta is func metadata (XXX should've done an info Riap request)
-            "\n",
-            "# and generated automatically using ", __PACKAGE__,
-            " version ", ($App::GenPericmdScript::VERSION // '?'), "\n",
+            $gen_sig,
             "\n",
             "# DATE\n",
             "# DIST\n",
