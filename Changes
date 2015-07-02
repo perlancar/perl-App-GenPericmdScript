@@ -1,5 +1,14 @@
 Revision history for App-GenPericmdScript
 
+0.09    2015-07-02 (PERLANCAR)
+
+	- [Bugfix] Didn't pass script_name to Perinci::CmdLine::Inline's
+          program_name.
+
+        - Add option: script_version (to pass to Perinci::CmdLine::Inline's
+          program_version).
+
+
 0.08    2015-07-02 (PERLANCAR)
 
 	- Add support for Perinci::CmdLine::Inline.
