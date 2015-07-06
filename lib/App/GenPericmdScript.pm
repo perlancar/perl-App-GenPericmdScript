@@ -352,6 +352,7 @@ sub gen_perinci_cmdline_script {
     [200, "OK", $code, {
         'func.cmdline_module' => $cmdline_mod,
         'func.cmdline_module_version' => $cmdline_mod_ver,
+        'func.cmdline_module_inlined' => ($cmdline_mod eq 'Perinci::CmdLine::Inline' ? 1:0),
         'func.script_name' => 0,
     }];
 }
