@@ -1,5 +1,10 @@
 Revision history for App-GenPericmdScript
 
+0.12    2015-07-08 (PERLANCAR)
+
+	- Add option: skip_format (passed to pericmd backend).
+
+
 0.11    2015-07-06 (PERLANCAR)
 
 	- Return result metadata: func.cmdline_module_inlined if module
