@@ -166,7 +166,10 @@ _
             summary => 'Use this for version number instead',
             schema => 'str',
         },
-
+        skip_format => {
+            summary => 'Assume that function returns raw text which needs no formatting',
+            schema  => 'bool',
+        },
     },
 };
 sub gen_perinci_cmdline_script {
@@ -270,6 +273,7 @@ sub gen_perinci_cmdline_script {
             (code_before_parse_cmdline_options => $args{snippet_before_instantiate_cmdline}) x !!$args{snippet_before_instantiate_cmdline},
             # config_filename => $args{config_filename},
             shebang => $args{interpreter_path},
+            skip_format => $args{skip_format} ? 1:0,
         );
         return $res if $res->[0] != 200;
         $code = $res->[2];
@@ -310,6 +314,7 @@ sub gen_perinci_cmdline_script {
             (defined($args{log}) ? "    log => " . dump($args{log}) . ",\n" : ""),
             (defined($args{extra_urls_for_version}) ? "    extra_urls_for_version => " . dump($args{extra_urls_for_version}) . ",\n" : ""),
             (defined($args{config_filename}) ? "    config_filename => " . dump($args{config_filename}) . ",\n" : ""),
+            ($args{skip_format} ? "    skip_format => 1,\n" : ""),
             ")->run;\n",
             "\n",
         );
