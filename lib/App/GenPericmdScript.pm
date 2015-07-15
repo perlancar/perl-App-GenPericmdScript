@@ -177,6 +177,9 @@ sub gen_perinci_cmdline_script {
 
     local $Data::Dump::INDENT = "    ";
 
+    # XXX schema
+    $args{ssl_verify_hostname} //= 1;
+
     my $output_file = $args{output_file};
 
     my $script_name = $args{script_name};
@@ -304,7 +307,8 @@ sub gen_perinci_cmdline_script {
                  defined($args{prefer_lite}) && !$args{prefer_lite} ? " -prefer_lite=>0" : ""),
             ";\n\n",
 
-            ($args{ssl_verify_hostname} ? "" : '$ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;' . "\n\n"),
+            ($args{ssl_verify_hostname} ?
+                 "" : '$ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;' . "\n\n"),
 
             ($args{snippet_before_instantiate_cmdline} ? "# snippet_before_instantiate_cmdline\n" . $args{snippet_before_instantiate_cmdline} . "\n\n" : ""),
 
