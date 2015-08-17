@@ -1,5 +1,13 @@
 Revision history for App-GenPericmdScript
 
+0.13    2015-08-17 (PERLANCAR)
+
+	- Switch from Log::Any to Log::Any::IfLOG.
+
+	- Don't output PERL_LWP_SSL_VERIFY_HOSTNAME statement unless
+	  ssl_verify_hostname explicitly set to 0.
+
+
 0.12    2015-07-08 (PERLANCAR)
 
 	- Add option: skip_format (passed to pericmd backend).
