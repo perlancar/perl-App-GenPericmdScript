@@ -143,10 +143,10 @@ _
             schema  => 'bool',
             default => 1,
         },
-        snippet_before_instantiate_cmdline => {
+        code_before_instantiate_cmdline => {
             schema => 'str',
         },
-        snippet_after_end => {
+        code_after_end => {
             schema => 'str',
         },
         config_filename => {
@@ -276,8 +276,8 @@ sub gen_perinci_cmdline_script {
             (extra_urls_for_version => $args{extra_urls_for_version}) x !!$args{extra_urls_for_version},
             include => $args{load_module},
             code_after_shebang => $gen_sig,
-            (code_before_parse_cmdline_options => $args{snippet_before_instantiate_cmdline}) x !!$args{snippet_before_instantiate_cmdline},
-            (code_after_end => $args{snippet_after_end}) x !!$args{snippet_after_end},
+            (code_before_parse_cmdline_options => $args{code_before_instantiate_cmdline}) x !!$args{code_before_instantiate_cmdline},
+            (code_after_end => $args{code_after_end}) x !!$args{code_after_end},
             # config_filename => $args{config_filename},
             shebang => $args{interpreter_path},
             skip_format => $args{skip_format} ? 1:0,
@@ -314,7 +314,7 @@ sub gen_perinci_cmdline_script {
             ($args{ssl_verify_hostname} ?
                  "" : '$ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;' . "\n\n"),
 
-            ($args{snippet_before_instantiate_cmdline} ? "# snippet_before_instantiate_cmdline\n" . $args{snippet_before_instantiate_cmdline} . "\n\n" : ""),
+            ($args{code_before_instantiate_cmdline} ? "# code_before_instantiate_cmdline\n" . $args{code_before_instantiate_cmdline} . "\n\n" : ""),
 
             "$cmdline_mod->new(\n",
             "    url => ", dump($args{url}), ",\n",
@@ -333,8 +333,8 @@ sub gen_perinci_cmdline_script {
         # podname
         $code .= "# PODNAME: $script_name\n";
 
-        $code .= "# snippet_after_end\n" . $args{snippet_after_end} . "\n\n"
-            if $args{snippet_after_end};
+        $code .= "# code_after_end\n" . $args{code_after_end} . "\n\n"
+            if $args{code_after_end};
 
     } # END generate code
 
