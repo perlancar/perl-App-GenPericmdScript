@@ -146,6 +146,9 @@ _
         snippet_before_instantiate_cmdline => {
             schema => 'str',
         },
+        snippet_after_end => {
+            schema => 'str',
+        },
         config_filename => {
             summary => 'Will be passed to Perinci::CmdLine constructor',
             schema => 'str',
@@ -274,6 +277,7 @@ sub gen_perinci_cmdline_script {
             include => $args{load_module},
             code_after_shebang => $gen_sig,
             (code_before_parse_cmdline_options => $args{snippet_before_instantiate_cmdline}) x !!$args{snippet_before_instantiate_cmdline},
+            (code_after_end => $args{snippet_after_end}) x !!$args{snippet_after_end},
             # config_filename => $args{config_filename},
             shebang => $args{interpreter_path},
             skip_format => $args{skip_format} ? 1:0,
@@ -328,6 +332,10 @@ sub gen_perinci_cmdline_script {
 
         # podname
         $code .= "# PODNAME: $script_name\n";
+
+        $code .= "# snippet_after_end\n" . $args{snippet_after_end} . "\n\n"
+            if $args{snippet_after_end};
+
     } # END generate code
 
     if ($output_file ne '-') {
