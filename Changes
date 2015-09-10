@@ -1,5 +1,13 @@
 Revision history for App-GenPericmdScript
 
+0.15    2015-09-10 (PERLANCAR)
+
+        - [Incompatible change] Rename snippet_* options to code_*, to be
+          consistent with Perinci::CmdLine::Inline.
+
+        - Add option: code_after_end.
+
+
 0.14    2015-09-09 (PERLANCAR)
 
 	- No functional changes.
