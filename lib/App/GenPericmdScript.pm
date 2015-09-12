@@ -165,6 +165,9 @@ _
         script_name => {
             schema => 'str',
         },
+        script_summary => {
+            schema => 'str',
+        },
         script_version => {
             summary => 'Use this for version number instead',
             schema => 'str',
@@ -269,8 +272,9 @@ sub gen_perinci_cmdline_script {
         $cmdline_mod_ver = $Perinci::CmdLine::Inline::VERSION;
         my $res = Perinci::CmdLine::Inline::gen_inline_pericmd_script(
             url => $args{url},
-            program_name => $args{script_name},
-            program_version => $args{script_version},
+            script_name => $args{script_name},
+            script_summary => $args{script_summary},
+            script_version => $args{script_version},
             subcommands => $subcommands,
             log => $args{log},
             (extra_urls_for_version => $args{extra_urls_for_version}) x !!$args{extra_urls_for_version},
@@ -328,7 +332,7 @@ sub gen_perinci_cmdline_script {
         );
 
         # abstract line
-        $code .= "# ABSTRACT: " . ($meta->{summary} // $script_name) . "\n";
+        $code .= "# ABSTRACT: " . ($args{script_summary} // $meta->{summary} // $script_name) . "\n";
 
         # podname
         $code .= "# PODNAME: $script_name\n";
