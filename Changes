@@ -1,5 +1,10 @@
 Revision history for App-GenPericmdScript
 
+0.16    2015-09-12 (PERLANCAR)
+
+	- Add option: script_summary.
+
+
 0.15    2015-09-10 (PERLANCAR)
 
         - [Incompatible change] Rename snippet_* options to code_*, to be
