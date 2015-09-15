@@ -127,6 +127,15 @@ _
             schema  => 'bool',
             default => 1,
         },
+        pass_cmdline_object => {
+            summary => 'Will be passed to Perinci::CmdLine constructor',
+            description => <<'_',
+
+Currently irrelevant when generating with Perinci::CmdLine::Inline.
+
+_
+            schema  => 'bool',
+        },
         log => {
             summary => 'Will be passed to Perinci::CmdLine constructor',
             schema  => 'bool',
@@ -324,6 +333,7 @@ sub gen_perinci_cmdline_script {
             "    url => ", dump($args{url}), ",\n",
             (defined($subcommands) ? "    subcommands => " . indent("    ", dump($subcommands), {first_line_indent=>""}) . ",\n" : ""),
             (defined($args{log}) ? "    log => " . dump($args{log}) . ",\n" : ""),
+            (defined($args{pass_cmdline_object}) ? "    pass_cmdline_object => " . dump($args{pass_cmdline_object}) . ",\n" : ""),
             (defined($args{extra_urls_for_version}) ? "    extra_urls_for_version => " . dump($args{extra_urls_for_version}) . ",\n" : ""),
             (defined($args{config_filename}) ? "    config_filename => " . dump($args{config_filename}) . ",\n" : ""),
             ($args{skip_format} ? "    skip_format => 1,\n" : ""),
