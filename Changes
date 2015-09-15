@@ -1,5 +1,11 @@
 Revision history for App-GenPericmdScript
 
+0.17    2015-09-15 (PERLANCAR)
+
+	- Add option: pass_cmdline_object (passed to Perinci::CmdLine
+	  constructor).
+
+
 0.16    2015-09-12 (PERLANCAR)
 
 	- Add option: script_summary.
