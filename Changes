@@ -1,5 +1,15 @@
 Revision history for App-GenPericmdScript
 
+0.18    2015-09-26 (PERLANCAR)
+
+	- Add options: read_config, read_env.
+
+	- [refactor, Incompatible change] argument name is now 'subcommands'
+	  (plural) but CLI option name is still --subcommand (singular).
+
+	- [ux] Add alias function gen_pericmd_script.
+
+
 0.17    2015-09-15 (PERLANCAR)
 
 	- Add option: pass_cmdline_object (passed to Perinci::CmdLine
