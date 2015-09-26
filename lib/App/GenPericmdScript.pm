@@ -161,6 +161,14 @@ _
         code_after_end => {
             schema => 'str',
         },
+        read_config => {
+            summary => 'Will be passed to Perinci::CmdLine constructor',
+            schema => 'bool',
+        },
+        read_env => {
+            summary => 'Will be passed to Perinci::CmdLine constructor',
+            schema => 'bool',
+        },
         config_filename => {
             summary => 'Will be passed to Perinci::CmdLine constructor',
             schema => 'str',
@@ -294,7 +302,9 @@ sub gen_pericmd_script {
             code_after_shebang => $gen_sig,
             (code_before_parse_cmdline_options => $args{code_before_instantiate_cmdline}) x !!$args{code_before_instantiate_cmdline},
             (code_after_end => $args{code_after_end}) x !!$args{code_after_end},
-            # config_filename => $args{config_filename},
+            # read_config => $args{read_config}, # currently unsupported
+            # read_env => $args{read_env}, # currently unsupported
+            # config_filename => $args{config_filename}, # currently unsupported
             shebang => $args{interpreter_path},
             skip_format => $args{skip_format} ? 1:0,
         );
@@ -338,6 +348,8 @@ sub gen_pericmd_script {
             (defined($args{log}) ? "    log => " . dump($args{log}) . ",\n" : ""),
             (defined($args{pass_cmdline_object}) ? "    pass_cmdline_object => " . dump($args{pass_cmdline_object}) . ",\n" : ""),
             (defined($args{extra_urls_for_version}) ? "    extra_urls_for_version => " . dump($args{extra_urls_for_version}) . ",\n" : ""),
+            (defined($args{read_config}) ? "    read_config => " . ($args{read_config} ? 1:0) . ",\n" : ""),
+            (defined($args{read_env})    ? "    read_env => " . ($args{read_env} ? 1:0) . ",\n" : ""),
             (defined($args{config_filename}) ? "    config_filename => " . dump($args{config_filename}) . ",\n" : ""),
             ($args{skip_format} ? "    skip_format => 1,\n" : ""),
             ")->run;\n",
