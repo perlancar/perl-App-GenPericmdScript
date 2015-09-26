@@ -13,7 +13,10 @@ use File::Which;
 use String::Indent qw(indent);
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(gen_perinci_cmdline_script);
+our @EXPORT_OK = qw(
+                       gen_perinci_cmdline_script
+                       gen_pericmd_script
+               );
 
 our %SPEC;
 
@@ -387,6 +390,10 @@ sub gen_perinci_cmdline_script {
         'func.script_name' => 0,
     }];
 }
+
+# alias
+*gen_pericmd_script = \&gen_perinci_cmdline_script;
+$SPEC{gen_pericmd_script} = $SPEC{gen_perinci_cmdline_script};
 
 1;
 # ABSTRACT:
