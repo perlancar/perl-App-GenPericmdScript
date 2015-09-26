@@ -64,8 +64,10 @@ $SPEC{gen_pericmd_script} = {
             req => 1,
             pos => 0,
         },
-        subcommand => {
-            summary => 'Subcommand name followed by colon and function URL',
+        subcommands => {
+            'x.name.is_plural' => 1,
+            summary => 'List of subcommand entries, where each entry is "name:url"',
+            'summary.alt.plurality.singular' => 'Subcommand name followed by colon and function URL',
             description => <<'_',
 
 Optionally, it can be additionally followed by a summary, so:
@@ -236,9 +238,9 @@ sub gen_pericmd_script {
     }
 
     my $subcommands;
-    if ($args{subcommand} && @{ $args{subcommand} }) {
+    if ($args{subcommands} && @{ $args{subcommands} }) {
         $subcommands = {};
-        for (@{ $args{subcommand} }) {
+        for (@{ $args{subcommands} }) {
             my ($sc_name, $sc_url, $sc_summary) = split /:/, $_, 3;
             $subcommands->{$sc_name} = {
                 url => $sc_url,
