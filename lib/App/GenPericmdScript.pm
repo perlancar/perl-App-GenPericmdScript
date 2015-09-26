@@ -38,7 +38,7 @@ sub _riap_request {
     _pa()->request($action => $url, %{$extras // {}});
 }
 
-$SPEC{gen_perinci_cmdline_script} = {
+$SPEC{gen_pericmd_script} = {
     v => 1.1,
     summary => 'Generate Perinci::CmdLine CLI script',
     args => {
@@ -190,7 +190,7 @@ _
         },
     },
 };
-sub gen_perinci_cmdline_script {
+sub gen_pericmd_script {
     my %args = @_;
 
     local $Data::Dump::INDENT = "    ";
@@ -392,8 +392,8 @@ sub gen_perinci_cmdline_script {
 }
 
 # alias
-*gen_pericmd_script = \&gen_perinci_cmdline_script;
-$SPEC{gen_pericmd_script} = $SPEC{gen_perinci_cmdline_script};
+*gen_perinci_cmdline_script = \&gen_pericmd_script;
+$SPEC{gen_perinci_cmdline_script} = $SPEC{gen_pericmd_script};
 
 1;
 # ABSTRACT:
