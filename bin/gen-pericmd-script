@@ -46,4 +46,4 @@ With subcommands:
 
 L<Perinci::CmdLine::Manual>
 
-L<Dist::Zilla::Plugin::Rinci::ScriptFromFunc>
+L<Dist::Zilla::Plugin::GenPericmdScript>
