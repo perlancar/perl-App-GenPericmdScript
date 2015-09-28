@@ -104,6 +104,10 @@ then the subcommands become:
 
 _
         },
+        default_subcommand => {
+            summary => 'Will be passed to Perinci::CmdLine constructor',
+            schema => 'str*',
+        },
         include_package_functions_match => {
             schema => 're*',
             summary => 'Only include package functions matching this pattern',
@@ -302,6 +306,7 @@ sub gen_pericmd_script {
             script_summary => $args{script_summary},
             script_version => $args{script_version},
             subcommands => $subcommands,
+            (default_subcommand => $args{default_subcommand}) x !!$args{default_subcommand},
             log => $args{log},
             (extra_urls_for_version => $args{extra_urls_for_version}) x !!$args{extra_urls_for_version},
             include => $args{load_module},
@@ -351,6 +356,7 @@ sub gen_pericmd_script {
             "$cmdline_mod->new(\n",
             "    url => ", dump($args{url}), ",\n",
             (defined($subcommands) ? "    subcommands => " . indent("    ", dump($subcommands), {first_line_indent=>""}) . ",\n" : ""),
+            (defined($args{default_subcommand}) ? "    default_subcommand => " . dump($args{default_subcommand}) . ",\n" : ""),
             (defined($args{log}) ? "    log => " . dump($args{log}) . ",\n" : ""),
             (defined($args{pass_cmdline_object}) ? "    pass_cmdline_object => " . dump($args{pass_cmdline_object}) . ",\n" : ""),
             (defined($args{extra_urls_for_version}) ? "    extra_urls_for_version => " . dump($args{extra_urls_for_version}) . ",\n" : ""),
