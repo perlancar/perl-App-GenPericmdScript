@@ -1,5 +1,10 @@
 Revision history for App-GenPericmdScript
 
+0.20    2015-09-28 (PERLANCAR)
+
+	- Add option: default_subcommand.
+
+
 0.19    2015-09-28 (PERLANCAR)
 
 	- Don't die when unable to meta url, to allow func+meta embedded in
