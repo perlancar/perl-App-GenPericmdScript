@@ -273,9 +273,13 @@ sub gen_pericmd_script {
     my $meta;
     {
         my $res = _riap_request(meta => $args{url} => {}, \%args);
-        return [500, "Can't meta $args{url}: $res->[0] - $res->[1]"]
-            unless $res->[0] == 200;
-        $meta = $res->[2];
+        if ($res->[0] == 200) {
+            $meta = $res->[2];
+        } else {
+            warn "Can't meta $args{url}: $res->[0] - $res->[1]"
+                if $args{-cmdline};
+            $meta = {v=>1.1, _note=>'No meta', args=>{}};
+        }
     }
 
     my $gen_sig = join(
