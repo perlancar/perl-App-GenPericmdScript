@@ -1,5 +1,11 @@
 Revision history for App-GenPericmdScript
 
+0.19    2015-09-28 (PERLANCAR)
+
+	- Don't die when unable to meta url, to allow func+meta embedded in
+	  the script e.g. via code_before_instantiate_cmdline.
+
+
 0.18    2015-09-26 (PERLANCAR)
 
 	- Add options: read_config, read_env.
