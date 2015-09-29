@@ -175,6 +175,11 @@ _
             summary => 'Will be passed to Perinci::CmdLine constructor',
             schema => 'str',
         },
+        config_dirs => {
+            summary => 'Will be passed to Perinci::CmdLine constructor',
+            'x.name.is_plural' => 1,
+            schema => ['array*', of=>'str*'],
+        },
         read_env => {
             summary => 'Will be passed to Perinci::CmdLine constructor',
             schema => 'bool',
@@ -319,6 +324,7 @@ sub gen_pericmd_script {
             (code_after_end => $args{code_after_end}) x !!$args{code_after_end},
             # read_config => $args{read_config}, # currently unsupported
             # config_filename => $args{config_filename}, # currently unsupported
+            # config_dirs => $args{config_dirs}, # currently unsupported
             # read_env => $args{read_env}, # currently unsupported
             # env_name => $args{env_name}, # currently unsupported
             shebang => $args{interpreter_path},
@@ -368,6 +374,7 @@ sub gen_pericmd_script {
             (defined($args{extra_urls_for_version}) ? "    extra_urls_for_version => " . dump($args{extra_urls_for_version}) . ",\n" : ""),
             (defined($args{read_config}) ? "    read_config => " . ($args{read_config} ? 1:0) . ",\n" : ""),
             (defined($args{config_filename}) ? "    config_filename => " . dump($args{config_filename}) . ",\n" : ""),
+            (defined($args{config_dirs}) ? "    config_dirs => " . dump($args{config_dirs}) . ",\n" : ""),
             (defined($args{read_env})    ? "    read_env => " . ($args{read_env} ? 1:0) . ",\n" : ""),
             (defined($args{env_name})    ? "    env_name => " . dump($args{env_name}) . ",\n" : ""),
             ($args{skip_format} ? "    skip_format => 1,\n" : ""),
