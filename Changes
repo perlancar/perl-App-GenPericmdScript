@@ -1,5 +1,12 @@
 Revision history for App-GenPericmdScript
 
+0.21    2015-09-29 (PERLANCAR)
+
+	- [Bugfix] script_name was not passed Perinci::CmdLine constructor.
+
+	- Add options: config_dirs, env_name.
+
+
 0.20    2015-09-28 (PERLANCAR)
 
 	- Add option: default_subcommand.
