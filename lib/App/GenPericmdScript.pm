@@ -356,6 +356,7 @@ sub gen_pericmd_script {
             "$cmdline_mod->new(\n",
             "    url => ", dump($args{url}), ",\n",
             (defined($subcommands) ? "    subcommands => " . indent("    ", dump($subcommands), {first_line_indent=>""}) . ",\n" : ""),
+            "    program_name => " . dump($script_name) . ",\n",
             (defined($args{default_subcommand}) ? "    default_subcommand => " . dump($args{default_subcommand}) . ",\n" : ""),
             (defined($args{log}) ? "    log => " . dump($args{log}) . ",\n" : ""),
             (defined($args{pass_cmdline_object}) ? "    pass_cmdline_object => " . dump($args{pass_cmdline_object}) . ",\n" : ""),
