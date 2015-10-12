@@ -1,5 +1,11 @@
 Revision history for App-GenPericmdScript
 
+0.22    2015-10-12 (PERLANCAR)
+
+	- [Incompatible change] Split backend module to Perinci-CmdLine-Gen
+          (backend functionality now resides in Perinci::CmdLine::Gen).
+
+
 0.21    2015-09-29 (PERLANCAR)
 
 	- [Bugfix] script_name was not passed Perinci::CmdLine constructor.
