@@ -3,6 +3,8 @@ package App::GenPericmdScript;
 # DATE
 # VERSION
 
+use 5.010001;
+
 1;
 # ABSTRACT: Generate Perinci::CmdLine CLI script (CLI)
 
