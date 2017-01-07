@@ -1,5 +1,3 @@
-Revision history for App-GenPericmdScript
-
 0.22    2015-10-12 (PERLANCAR)
 
 	- [Incompatible change] Split backend module to Perinci-CmdLine-Gen
