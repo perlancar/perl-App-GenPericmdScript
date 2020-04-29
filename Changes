@@ -1,3 +1,9 @@
+0.230   2020-04-29  Released-By: PERLANCAR; Urgency: low
+
+        - [build] Rebuild with updated deps to remove dependency to the
+          deprecated Perinci::Sub::ArgEntity::*.
+
+
 0.22    2015-10-12  Released-By: PERLANCAR
 
 	- [Incompatible change] Split backend module to Perinci-CmdLine-Gen
